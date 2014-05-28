@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>API Overview</title>
+</head>
+<body>
+  <p>Circe is a hash algorithm framework that supports pluggable hash
+    implementations discovered at runtime. Its primary goal is to enable the
+    usage of high-performance native-code and hardware-accelerated hash
+    algorithms, while also providing pure Java implementations when native
+    libraries or hardware acceleration are not available.</p>
+  <p>Circe provides hash functions in both stateful and stateless forms. The
+    stateful form accumulates state internally from potentially multiple input
+    segments and provides access to the output as various primitive types and
+    byte arrays. The stateless form is available when the output can be
+    represented by an {@code int} or a {@code long} and provides the output
+    immediately for a given input. Additionally, for algorithms like CRC where
+    the state and output are essentially interchangeable, an incremental
+    stateless form is provided that allows more data to be hashed using the
+    output from hashing a previous segment. To facilitate access from native
+    code, all hash interfaces accept input from direct (and non-direct) {@link
+    java.nio.ByteBuffer} objects and (unsafe) {@code long} memory addresses, in
+    addition to Java byte arrays.</p>
+</body>
+</html>
