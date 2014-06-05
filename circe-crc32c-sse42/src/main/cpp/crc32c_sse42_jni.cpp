@@ -62,8 +62,8 @@ JNIEXPORT jlong JNICALL Java_com_scurrilous_circe_crc_Sse42Crc32C_allocConfig
     }
     configs = (chunk_config*) ::operator new[](sizeof(chunk_config) * len, std::nothrow);
     if (configs) {
-        for (jsize i = 0; i < len; ++i) {
-            new(&configs[i]) chunk_config(arr[i], i + 1 < len ? &configs[i + 1] : 0);
+        for (jsize i = len; i > 0; --i) {
+            new(&configs[i - 1]) chunk_config(arr[i - 1], i < len ? &configs[i] : 0);
         }
     }
 fail:

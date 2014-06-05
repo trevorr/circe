@@ -39,7 +39,10 @@ const size_t MB = 1024*1024;
 int main(int argc, char* argv[]) {
     const bool full = argc > 1 && strcmp(argv[1], "--full") == 0;
 
-    crc32c_initialize();
+    if (!crc32c_initialize()) {
+        printf("SSE 4.2 not detected!");
+        return 0;
+    }
 
     const uint64_t freq = get_tick_freq();
 

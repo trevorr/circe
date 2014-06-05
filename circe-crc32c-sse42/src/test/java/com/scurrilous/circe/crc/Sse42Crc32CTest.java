@@ -33,11 +33,13 @@ public class Sse42Crc32CTest {
 
     private static final Charset ASCII = Charset.forName("ASCII");
     private static final Sse42Crc32CProvider PROVIDER = new Sse42Crc32CProvider();
-    private static final IncrementalIntHash NATIVE_CRC32C = PROVIDER.getIncrementalInt(CRC32C);
+
+    private IncrementalIntHash NATIVE_CRC32C;
 
     @Before
     public void checkSupported() {
         assumeTrue(Sse42Crc32C.isSupported());
+        NATIVE_CRC32C = PROVIDER.getIncrementalInt(CRC32C);
     }
 
     @Test
