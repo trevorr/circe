@@ -205,19 +205,26 @@
         </plugins>
       </build>
     </profile>
-    <!-- TODO: find a less terrible way to conditionally build native modules -->
+
+    <!-- platform-specific profiles for NAR artifacts -->
+
     <profile>
-      <id>windows</id>
+      <id>windows-amd64</id>
       <activation>
         <os>
           <family>windows</family>
+          <arch>amd64</arch>
         </os>
       </activation>
       <modules>
         <module>circe-crc32c-sse42</module>
         <module>circe-crc32c-sse42-lib</module>
       </modules>
+      <properties>
+        <nar.runtime>static</nar.runtime>
+      </properties>
     </profile>
+
     <profile>
       <id>linux-amd64</id>
       <activation>
@@ -230,12 +237,17 @@
         <module>circe-crc32c-sse42</module>
         <module>circe-crc32c-sse42-lib</module>
       </modules>
+      <properties>
+        <nar.runtime>dynamic</nar.runtime>
+        <nar.cpp.optionSet>-msse4.2 -mpclmul</nar.cpp.optionSet>
+      </properties>
     </profile>
+
     <profile>
-      <id>linux-x86_64</id>
+      <id>mac-x86_64</id>
       <activation>
         <os>
-          <name>linux</name>
+          <family>mac</family>
           <arch>x86_64</arch>
         </os>
       </activation>
@@ -243,6 +255,10 @@
         <module>circe-crc32c-sse42</module>
         <module>circe-crc32c-sse42-lib</module>
       </modules>
+      <properties>
+        <nar.runtime>dynamic</nar.runtime>
+        <nar.cpp.optionSet>-msse4.2 -mpclmul</nar.cpp.optionSet>
+      </properties>
     </profile>
   </profiles>
 </project>

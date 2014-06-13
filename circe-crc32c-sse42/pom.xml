@@ -54,6 +54,7 @@
         <artifactId>nar-maven-plugin</artifactId>
         <extensions>true</extensions>
         <configuration>
+          <runtime>${nar.runtime}</runtime>
           <libraries>
             <library>
               <type>jni</type>
@@ -61,6 +62,7 @@
             </library>
           </libraries>
           <cpp>
+            <optionSet>${nar.cpp.optionSet}</optionSet>
             <exceptions>false</exceptions>
             <rtti>false</rtti>
             <optimize>full</optimize>
@@ -71,75 +73,6 @@
   </build>
 
   <profiles>
-    <profile>
-      <id>windows</id>
-      <activation>
-        <os>
-          <family>windows</family>
-        </os>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.github.maven-nar</groupId>
-            <artifactId>nar-maven-plugin</artifactId>
-            <configuration>
-              <runtime>static</runtime>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>linux-amd64</id>
-      <activation>
-        <os>
-          <name>linux</name>
-          <arch>amd64</arch>
-        </os>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.github.maven-nar</groupId>
-            <artifactId>nar-maven-plugin</artifactId>
-            <configuration>
-              <cpp>
-                <options>
-                  <option>-msse4.2</option>
-                  <option>-mpclmul</option>
-                </options>
-              </cpp>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>linux-x86_64</id>
-      <activation>
-        <os>
-          <name>linux</name>
-          <arch>x86_64</arch>
-        </os>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.github.maven-nar</groupId>
-            <artifactId>nar-maven-plugin</artifactId>
-            <configuration>
-              <cpp>
-                <options>
-                  <option>-msse4.2</option>
-                  <option>-mpclmul</option>
-                </options>
-              </cpp>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
     <profile>
       <id>test-direct-access</id>
       <dependencies>
