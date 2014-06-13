@@ -38,7 +38,7 @@ JNIEXPORT jint JNICALL Java_com_scurrilous_circe_crc_Sse42Crc32C_nativeDirectBuf
     const char *address = (const char *) env->GetDirectBufferAddress(input);
     if (!address)
         return 0;
-    return (jint) crc32c((uint32_t) current, address + offset, length, (const chunk_config*) config);
+    return (jint) crc32c((uint32_t) current, address + offset, (size_t) length, (const chunk_config*) config);
 }
 
 extern "C"
@@ -60,10 +60,10 @@ JNIEXPORT jlong JNICALL Java_com_scurrilous_circe_crc_Sse42Crc32C_allocConfig
             || arr[i] >= arr[i - 1]) // chunk words must be strictly decreasing
             goto fail;
     }
-    configs = (chunk_config*) ::operator new[](sizeof(chunk_config) * len, std::nothrow);
+    configs = (chunk_config*) ::operator new[](sizeof(chunk_config) * (size_t) len, std::nothrow);
     if (configs) {
         for (jsize i = len; i > 0; --i) {
-            new(&configs[i - 1]) chunk_config(arr[i - 1], i < len ? &configs[i] : 0);
+            new(&configs[i - 1]) chunk_config((size_t) arr[i - 1], i < len ? &configs[i] : 0);
         }
     }
 fail:
@@ -73,6 +73,6 @@ fail:
 
 extern "C"
 JNIEXPORT void JNICALL Java_com_scurrilous_circe_crc_Sse42Crc32C_freeConfig
-  (JNIEnv *env, jclass, jlong config) {
+  (JNIEnv *, jclass, jlong config) {
     delete[] (const chunk_config*) config;
 }

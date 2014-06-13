@@ -222,6 +222,7 @@
       </modules>
       <properties>
         <nar.runtime>static</nar.runtime>
+        <nar.cpp.optionSet>/W4 /D_CRT_SECURE_NO_WARNINGS</nar.cpp.optionSet>
       </properties>
     </profile>
 

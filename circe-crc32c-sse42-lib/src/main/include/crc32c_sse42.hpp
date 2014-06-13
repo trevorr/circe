@@ -32,6 +32,8 @@ public:
     size_t extra() const { return (words - 1) % 3 + 1; }
 
 private:
+    chunk_config& operator=(const chunk_config&);
+
     static void make_shift_table(size_t bytes, uint32_t table[256]);
 };
 

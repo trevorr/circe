@@ -107,10 +107,10 @@ static uint32_t crc32c_chunk(uint32_t crc, const void *buf, const chunk_config& 
 # ifdef CRC32C_PCLMULQDQ
     if (has_pclmulqdq) {
         __m128i k = _mm_set_epi64x(config.shift1[1], config.shift2[1]);
-        __m128i mul1 = _mm_clmulepi64_si128(_mm_cvtsi64_si128(crc1), k, 0x10);
-        __m128i mul0 = _mm_clmulepi64_si128(_mm_cvtsi64_si128(crc0), k, 0x00);
-        tmp ^= _mm_cvtsi128_si64(mul1);
-        tmp ^= _mm_cvtsi128_si64(mul0);
+        __m128i mul1 = _mm_clmulepi64_si128(_mm_cvtsi64_si128((int64_t) crc1), k, 0x10);
+        __m128i mul0 = _mm_clmulepi64_si128(_mm_cvtsi64_si128((int64_t) crc0), k, 0x00);
+        tmp ^= (uint64_t) _mm_cvtsi128_si64(mul1);
+        tmp ^= (uint64_t) _mm_cvtsi128_si64(mul0);
     } else
 # endif
     {
@@ -160,7 +160,7 @@ static uint32_t crc32c_words(uint32_t crc, const void *buf, size_t count) {
 static uint32_t crc32c_bytes(uint32_t crc, const void *buf, size_t count) {
     DEBUG_PRINTF3("  crc32c_bytes(crc = 0x%08x, buf = %p, count = " SIZE_T_FORMAT ")", crc, buf, count);
 
-    const char *pc = (const char*) buf;
+    const uint8_t *pc = (const uint8_t*) buf;
     size_t loops = (count + 7) / 8;
     assert(loops > 0);
     switch (count & 7) {

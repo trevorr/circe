@@ -21,17 +21,31 @@
 #include <string.h>
 
 #ifdef _MSC_VER
+
 # include <windows.h>
-static uint64_t get_ticks() { LARGE_INTEGER t; QueryPerformanceCounter(&t); return t.QuadPart; }
-static uint64_t get_tick_freq() { LARGE_INTEGER t; QueryPerformanceFrequency(&t); return t.QuadPart; }
+static uint64_t get_ticks() { LARGE_INTEGER t; QueryPerformanceCounter(&t); return (uint64_t) t.QuadPart; }
+static uint64_t get_tick_freq() { LARGE_INTEGER t; QueryPerformanceFrequency(&t); return (uint64_t) t.QuadPart; }
+
+#elif defined(__MACH__)
+
+#include <mach/mach_time.h>
+static uint64_t get_ticks() { return mach_absolute_time(); }
+static uint64_t get_tick_freq() {
+    mach_timebase_info_data_t timebase;
+    mach_timebase_info(&timebase);
+    return 1000000000 * timebase.denom / timebase.numer;
+}
+
 #else
+
 # include <time.h>
 static uint64_t get_ticks() {
     timespec t;
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t);
-    return (uint64_t) t.tv_sec * 1000000000 + t.tv_nsec;
+    return (uint64_t) (t.tv_sec * 1000000000 + t.tv_nsec);
 }
 static uint64_t get_tick_freq() { return 1000000000; }
+
 #endif
 
 const size_t MB = 1024*1024;
@@ -103,34 +117,34 @@ int main(int argc, char* argv[]) {
     }
 
     const int max_chunk_sizes = 2;
-    const int full_configs[][max_chunk_sizes] = {
+    const size_t full_configs[][max_chunk_sizes] = {
         { 0 },
         { 64, 0 }, { 128, 0 }, { 256, 0 }, { 512, 0 }, { 1024, 0 }, { 2048, 0 }, { 4096, 0 },
         { 64, 4096 }, { 128, 4096 }, { 256, 4096 }, { 512, 4096 }, { 1024, 4096 } };
-    const int fast_configs[][max_chunk_sizes] = { { 0 }, { 64, 4096 } };
-    const int (*configs)[max_chunk_sizes] = full ? full_configs : fast_configs;
+    const size_t fast_configs[][max_chunk_sizes] = { { 0 }, { 64, 4096 } };
+    const size_t (*configs)[max_chunk_sizes] = full ? full_configs : fast_configs;
     const size_t configs_size = full ? sizeof(full_configs) : sizeof(fast_configs);
     const int config_count = (int) (configs_size / sizeof(configs[0]));
     for (int i = 0; i < config_count; ++i) {
         printf("chunk config %d:\n", i);
         const chunk_config* config = 0;
         for (int j = 0; j < max_chunk_sizes && configs[i][j]; ++j) {
-            printf("  chunk size %d: %d words\n", j, configs[i][j]);
+            printf("  chunk size %d: " SIZE_T_FORMAT " words\n", j, configs[i][j]);
             config = new chunk_config(configs[i][j], config);
         }
 
-        fprintf(ctrlfile, ", '' index %d with lines title '%d/%d words'",
+        fprintf(ctrlfile, ", '' index %d with lines title '" SIZE_T_FORMAT "/" SIZE_T_FORMAT " words'",
             plotindex++, configs[i][0], configs[i][1]);
 
         const float m = full ? 1.1f : 2.0f;
-        for (size_t len = minlen; len <= maxlen; len = (int) ceilf((float) len * m)) {
+        for (size_t len = minlen; len <= maxlen; len = (size_t) ceilf((float) len * m)) {
             if (len > 256)
-                len = (len + 7) & ~7;
+                len = (len + 7) & ~(size_t) 7;
 
             printf("[%d/%d] length " SIZE_T_FORMAT ": ", i, config_count, len);
 
-            uint32_t crc;
-            size_t ofs;
+            uint32_t crc = 0;
+            size_t ofs = 0;
             uint64_t best = 0;
             for (int rep = 0; rep < reps; ++rep) {
                 crc = 0;
