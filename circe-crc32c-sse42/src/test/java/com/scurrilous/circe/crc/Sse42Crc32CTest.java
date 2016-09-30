@@ -99,4 +99,15 @@ public class Sse42Crc32CTest {
             assertEquals(expected, impl.calculate(bytes));
         }
     }
+
+    @Test
+    public void testCRC32CIncremental() {
+        final String data = "data";
+        final String combined = data + data;
+
+        final int dataChecksum = NATIVE_CRC32C.calculate(data.getBytes(ASCII));
+        final int combinedChecksum = NATIVE_CRC32C.calculate(combined.getBytes(ASCII));
+        final int incrementalChecksum = NATIVE_CRC32C.resume(dataChecksum, data.getBytes(ASCII));
+        assertEquals(combinedChecksum, incrementalChecksum);
+    }
 }

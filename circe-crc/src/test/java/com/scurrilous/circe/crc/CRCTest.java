@@ -31,12 +31,14 @@ import java.nio.charset.Charset;
 import org.junit.Test;
 
 import com.scurrilous.circe.HashProvider;
+import com.scurrilous.circe.IncrementalIntHash;
 import com.scurrilous.circe.params.CrcParameters;
 
 /**
- * Tests the {@link StandardCrcProvider} with various CRC algorithms. See the <a
- * href="http://reveng.sourceforge.net/crc-catalogue/">Catalogue of parametrised
- * CRC algorithms</a> for more information on these algorithms and others.
+ * Tests the {@link StandardCrcProvider} with various CRC algorithms. See the
+ * <a href="http://reveng.sourceforge.net/crc-catalogue/">Catalogue of
+ * parametrised CRC algorithms</a> for more information on these algorithms and
+ * others.
  */
 @SuppressWarnings("javadoc")
 public class CRCTest {
@@ -130,8 +132,30 @@ public class CRCTest {
     }
 
     @Test
+    public void testBZIP2Incremental() {
+        // non-reflected
+        testIncremental(PROVIDER.getIncrementalInt(CRC32_BZIP2));
+    }
+
+    @Test
     public void testCRC32C() {
         assertEquals(0xe3069283, PROVIDER.getIncrementalInt(CRC32C).calculate(DIGITS));
+    }
+
+    @Test
+    public void testCRC32CIncremental() {
+        // reflected
+        testIncremental(PROVIDER.getIncrementalInt(CRC32C));
+    }
+
+    private void testIncremental(IncrementalIntHash hash) {
+        final String data = "data";
+        final String combined = data + data;
+
+        final int dataChecksum = hash.calculate(data.getBytes(ASCII));
+        final int combinedChecksum = hash.calculate(combined.getBytes(ASCII));
+        final int incrementalChecksum = hash.resume(dataChecksum, data.getBytes(ASCII));
+        assertEquals(combinedChecksum, incrementalChecksum);
     }
 
     @Test
