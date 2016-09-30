@@ -11,7 +11,7 @@ Currently Implemented Algorithms
 All of Circe's hash algorithms are implemented in optional provider modules:
 
 * `circe-crc`: Pure Java implementations of any CRC function up to 64 bits, including CRC-32, CRC-32C, and CRC-64. CRC-32 can be provided by `java.util.zip.CRC32`, which uses the native implementation in `zlib`.
-* `circe-crc32c-sse42`: Hardware-accelerated CRC-32C using the x86-64 SSE 4.2 `crc32` and (if available) `pclmulqdq` instructions. Processes almost 15 GB/s on a desktop Intel Core i7-2600, compared to 1 GB/s with `java.util.zip.CRC32`. Currently supports MSVC on Windows and GCC on Linux, with runtime detection of processor support.
+* `circe-crc32c-sse42`: Hardware-accelerated CRC-32C using the x86-64 SSE 4.2 `crc32` and (if available) `pclmulqdq` instructions. Processes almost 15 GB/s on a desktop Intel Core i7-2600, compared to 1 GB/s with `java.util.zip.CRC32`. Currently supports MSVC on Windows and GCC on Linux and Mac OS X, with runtime detection of processor support.
 * `circe-digest`: Wrapper around `javax.security.MessageDigest`, providing MD5, SHA-1, SHA-256, SHA-384, and SHA-512.
 * `circe-guava`: Wrapper around `com.google.common.hash.Hashing`, providing [MurmurHash3](https://code.google.com/p/smhasher/wiki/MurmurHash3) and [SipHash-2-4](https://131002.net/siphash/).
 
@@ -25,7 +25,7 @@ For unit testing, Circe uses JUnit 4, [JMockit](https://code.google.com/p/jmocki
 Building
 ----
 
-Circe is built using [Maven](http://maven.apache.org/), with native code is built using the [Maven NAR Plugin](http://maven-nar.github.io/). To build the entire project and run all unit tests, simply run `mvn install`. To perform a full release build, including source and Javadoc JARs, and local Maven install, run `mvn install -P release`. To build aggregated Javadoc (placed under `target/site/apidocs`), run `mvn site`.
+Circe is built using [Maven](http://maven.apache.org/), with native code built using the [Maven NAR Plugin](http://maven-nar.github.io/). To build the entire project and run all unit tests, simply run `mvn install`. To perform a full release build, including source and Javadoc JARs, and local Maven install, run `mvn install -P release`. To build aggregated Javadoc (placed under `target/site/apidocs`), run `mvn site`.
 
 License
 ----
