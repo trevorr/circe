@@ -23,6 +23,11 @@ final class ReflectedLongCrc extends AbstractLongCrc {
 
     private final long[] table = new long[256];
 
+    @Override
+    protected long initial() {
+        return reflect(super.initial());
+    }
+
     ReflectedLongCrc(String algorithm, int width, long poly, long init, long xorOut) {
         super(algorithm, width, init, xorOut);
 
@@ -37,7 +42,6 @@ final class ReflectedLongCrc extends AbstractLongCrc {
 
     @Override
     protected long resumeRaw(long crc, byte[] input, int index, int length) {
-        crc = reflect(crc);
         for (int i = 0; i < length; ++i)
             crc = table[(int) (crc ^ input[index + i]) & 0xff] ^ (crc >>> 8);
         return crc;
