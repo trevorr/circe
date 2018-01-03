@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import com.scurrilous.circe.HashProvider;
 import com.scurrilous.circe.IncrementalIntHash;
+import com.scurrilous.circe.IncrementalLongHash;
 import com.scurrilous.circe.params.CrcParameters;
 
 /**
@@ -183,5 +184,21 @@ public class CRCTest {
     @Test
     public void testCRC64_XZ() {
         assertEquals(0x995dc9bbdf1939faL, PROVIDER.getIncrementalLong(CRC64_XZ).calculate(DIGITS));
+    }
+    
+    @Test
+    public void testCRC32CIncrementalLong() {
+        // reflected
+        testIncrementalLong(PROVIDER.getIncrementalLong(CRC32C));
+    }
+
+    private void testIncrementalLong(IncrementalLongHash hash) {
+        final String data = "data";
+        final String combined = data + data;
+
+        final long dataChecksum = hash.calculate(data.getBytes(ASCII));
+        final long combinedChecksum = hash.calculate(combined.getBytes(ASCII));
+        final long incrementalChecksum = hash.resume(dataChecksum, data.getBytes(ASCII));
+        assertEquals(combinedChecksum, incrementalChecksum);
     }
 }
