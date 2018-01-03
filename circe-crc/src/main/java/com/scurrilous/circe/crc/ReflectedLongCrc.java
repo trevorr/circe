@@ -23,11 +23,6 @@ final class ReflectedLongCrc extends AbstractLongCrc {
 
     private final long[] table = new long[256];
 
-    @Override
-    protected long initial() {
-        return reflect(super.initial());
-    }
-
     ReflectedLongCrc(String algorithm, int width, long poly, long init, long xorOut) {
         super(algorithm, width, init, xorOut);
 
@@ -38,6 +33,11 @@ final class ReflectedLongCrc extends AbstractLongCrc {
                 crc = (crc & 1) != 0 ? (crc >>> 1) ^ poly : crc >>> 1;
             table[i] = crc;
         }
+    }
+
+    @Override
+    protected long initial() {
+        return reflect(super.initial());
     }
 
     @Override
