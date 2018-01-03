@@ -187,7 +187,7 @@ public class CRCTest {
     }
     
     @Test
-    public void testCRC64CIncremental() {
+    public void testCRC32CIncrementalLong() {
         // reflected
         testIncrementalLong(PROVIDER.getIncrementalLong(CRC32C));
     }
