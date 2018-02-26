@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<assembly>
+  <id>all</id>
+  <formats>
+    <format>jar</format>
+  </formats>
+
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <excludes>
+        <exclude>com.scurrilous</exclude>
+        <exclude>*:nar:*</exclude>
+      </excludes>
+    </dependencySet>
+  </dependencySets>
+  <fileSets>
+    <fileSet>
+      <directory>${project.build.directory}/nar/${project.artifactId}-${project.version}-${os.arch}-MacOSX-gpp-jni/lib/${os.arch}-MacOSX-gpp/jni
+      </directory>
+      <outputDirectory>lib</outputDirectory>
+      <includes>
+        <include>lib*</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>${project.build.directory}/nar/${project.artifactId}-${project.version}-${os.arch}-Linux-gpp-jni/lib/${os.arch}-Linux-gpp/jni
+      </directory>
+      <outputDirectory>lib</outputDirectory>
+      <includes>
+        <include>lib*</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>${project.build.directory}/nar/${project.artifactId}-${project.version}-${os.arch}-${os.name}-gpp-jni/lib/${os.arch}-${os.name}-gpp/jni
+      </directory>
+      <outputDirectory>lib</outputDirectory>
+      <includes>
+        <include>lib*</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>${project.build.directory}/classes</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</assembly>

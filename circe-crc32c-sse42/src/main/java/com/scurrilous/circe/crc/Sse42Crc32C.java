@@ -20,6 +20,7 @@ import java.nio.ByteBuffer;
 import com.scurrilous.circe.IncrementalIntHash;
 import com.scurrilous.circe.impl.AbstractIncrementalIntHash;
 import com.scurrilous.circe.params.CrcParameters;
+import static com.scurrilous.circe.crc.LibraryUtils.*;
 
 /**
  * Implementation of CRC-32C using the SSE 4.2 CRC instruction.
@@ -30,7 +31,7 @@ public final class Sse42Crc32C extends AbstractIncrementalIntHash implements Inc
 
     private static boolean checkSupported() {
         try {
-            NarSystem.loadLibrary();
+            loadLibraryFromJar("/lib/libcirce-crc32c-sse42." + libType());
             return nativeSupported();
         } catch (final Exception | UnsatisfiedLinkError e) {
             return false;
